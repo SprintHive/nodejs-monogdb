@@ -7,12 +7,13 @@
     "hello": "node hello.js",
     "query": "node index.js",
     "individual": "node individual.js",
+    "address": "node address.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^2.2.31",
-    "rxjs": "^5.4.3"
+    "mongodb": "^2.2.33",
+    "rxjs": "^5.5.0"
   }
 }
