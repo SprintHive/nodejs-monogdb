@@ -1,0 +1,58 @@
+{
+  "553784de-63e0-4c2b-b8f5-b70a148e93e7": {
+    "individualVerificationResult": {
+      "_id": "59e0869922a78dc6441e884e",
+      "_class": "com.sprinthive.kyc.core.individual.data.model.IndividualVerificationResultModel",
+      "creationDate": "2017-10-13T09:25:45.212Z",
+      "individualVerificationId": "553784de-63e0-4c2b-b8f5-b70a148e93e7",
+      "traceId": "e866f90b2c79f1c59e54a4f83986cbba",
+      "providedIndividualProfileId": "59e0869822a78dc6441e8849",
+      "matchingRuleVersion": "v0.0.1",
+      "matchDetails": {
+        "hasVerifiedHomeAffairsDate": true,
+        "dateOfBirthMatched": true,
+        "deceased": false,
+        "nameMatched": true
+      },
+      "profileMatches": false
+    },
+    "individualVerificationRequested": {
+      "_id": "553784de-63e0-4c2b-b8f5-b70a148e93e7",
+      "_class": "com.sprinthive.kyc.core.individual.data.event.IndividualVerificationRequestedModel",
+      "traceId": "e866f90b2c79f1c59e54a4f83986cbba",
+      "creationDate": "2017-10-13T09:25:44.333Z",
+      "identityType": "ID",
+      "identifyingNumber": "7811145141084",
+      "firstName": "Bobby",
+      "middleNames": "Jim",
+      "lastName": "success",
+      "dateOfBirth": "1978-11-13T22:00:00.000Z",
+      "nationality": "ZA",
+      "deceased": false,
+      "metadata": {
+        "division": "DJV",
+        "referenceNumber": "both-ref",
+        "accountNumber": "7010100",
+        "wbCustomerNumber": "wbCustomerNumber",
+        "branch": "CPT"
+      }
+    },
+    "individualVerificationProvided": {
+      "_id": "59e0869822a78dc6441e8849",
+      "_class": "com.sprinthive.kyc.core.individual.data.event.IndividualVerificationProvidedModel",
+      "individualVerificationId": "553784de-63e0-4c2b-b8f5-b70a148e93e7",
+      "traceId": "e866f90b2c79f1c59e54a4f83986cbba",
+      "creationDate": "2017-10-13T09:25:44.952Z",
+      "dataProvider": "E4",
+      "dataSubProvider": "XDS",
+      "dataProviderRequestId": "efd8f883-dc7a-4bf7-aa7f-0da1d5189b8b",
+      "verifiedWithHomeAffairsDate": "2017-09-09T22:00:00.000Z",
+      "providerIdentityNumber": "7811145141084",
+      "firstName": "Bobby",
+      "middleNames": "Jim",
+      "lastName": "success",
+      "dateOfBirth": "1978-11-13T22:00:00.000Z",
+      "deceased": false
+    }
+  }
+}

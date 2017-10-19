@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fs-extra": "^4.0.2",
     "mongodb": "^2.2.31",
     "rxjs": "^5.4.3"
   }
