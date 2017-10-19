@@ -30,7 +30,7 @@ Browse to the following link and follow the instructions
     cd hello-mongodb
     yarn 
     
-    # Run the index.js 
-    yarn run query 
-    or 
-    node index.js    
+    # Run the hello.js 
+    yarn hello 
+
+    # See the package.json#scripts block for more things to run.
