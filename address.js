@@ -45,21 +45,38 @@ function findAddressVerificationResult({state}) {
       db.collection("AddressVerificationResult")
       .find()
       .toArray())
-  .map(d => {
-    if (d.length) {
-      d.forEach(r => {
-        if (!state.results[r.addressVerificationId].hasOwnProperty("matchingResults")) {
-          // console.log("ID " + r.addressVerificationId + " has no matchingResults"
-          //     + " array, creating");
-          state.results[r.addressVerificationId].matchingResults = [];
-        }
-        state.results[r.addressVerificationId].matchingResults.push({
-          addressVerificationResult: r
-        });
+    .mergeMap(results => Rx.Observable.from(results))
+    .do(r => !state.results[r.addressVerificationId] && console.log(`Request not found for addressVerificationId: ${r.addressVerificationId}`))
+    .filter(r => state.results[r.addressVerificationId])
+    .reduce((state, r) => {
+      if (!state.results[r.addressVerificationId].hasOwnProperty("addressVerificationResult")) {
+        state.results[r.addressVerificationId].addressVerificationResult = [];
+      }
+      state.results[r.addressVerificationId].addressVerificationResult.push({
+        addressVerificationResult: r
       });
-    }
-    return state;
-  })
+      return state;
+    }, state)
+}
+
+function findAddressProvided({state}) {
+  const {db} = state;
+  return Rx.Observable.fromPromise(
+      db.collection("AddressProvided")
+      .find()
+      .toArray())
+    .mergeMap(results => Rx.Observable.from(results))
+    .do(r => !state.results[r.addressVerificationId] && console.log(`Request not found for addressVerificationId: ${r.addressVerificationId}`))
+    .filter(r => state.results[r.addressVerificationId])
+    .reduce((state, r) => {
+      if (!state.results[r.addressVerificationId].hasOwnProperty("addressProvided")) {
+        state.results[r.addressVerificationId].addressProvided = [];
+      }
+      state.results[r.addressVerificationId].addressProvided.push({
+        addressVerificationResult: r
+      });
+      return state;
+    }, state)
 }
 
 function save(state) {
@@ -73,12 +90,14 @@ const eventStream = Rx.Observable.of({
   results: {}
 }).mergeMap(createConnection)
 .mergeMap(state => findAddressVerificationRequested({state}))
+.mergeMap(state => findAddressProvided({state}))
 .mergeMap(state => findAddressVerificationResult({state}));
 
 eventStream
 .do(save)
 .subscribe(ans => {
-  console.log(JSON.stringify(ans.results));
+  const count = Object.keys(ans.results).length;
+  console.log(`Found ${count} records`);
   ans.db.close();
 }, err => console.log(err), () => console.log("Completed"));
 
