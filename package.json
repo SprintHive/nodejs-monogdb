@@ -13,8 +13,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fs": "0.0.1-security",
+    "fs-extra": "^4.0.2",
     "mongodb": "^2.2.33",
-    "rxjs": "^5.5.0",
-    "fs-extra": "^4.0.2"
+    "rxjs": "^5.5.0"
   }
 }

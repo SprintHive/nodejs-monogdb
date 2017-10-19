@@ -4,7 +4,8 @@ const ReadPreference = require('mongodb').ReadPreference;
 const fs = require('fs-extra');
 
 const createConnection = (state) => {
-  return Rx.Observable.fromPromise(MongoClient.connect(state.url, {readPreference: ReadPreference.NEAREST}))
+  return Rx.Observable.fromPromise(
+      MongoClient.connect(state.url, {readPreference: ReadPreference.NEAREST}))
     .map(db => {
       state.db = db;
       return state;
@@ -63,7 +64,7 @@ function findProvidedIndividualProfiles(state) {
 }
 
 function save(state) {
-  return Rx.Observable.fromPromise(fs.writeJson('./out.json', state.results))
+  return Rx.Observable.fromPromise(fs.writeJson('./out_identity.json', state.results))
 }
 
 Rx.Observable.of({

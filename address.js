@@ -1,8 +1,11 @@
 const Rx = require("rxjs/Rx");
 const MongoClient = require('mongodb').MongoClient;
+const ReadPreference = require('mongodb').ReadPreference;
+const fs = require('fs-extra');
 
 const createConnection = (state) => {
-  return Rx.Observable.fromPromise(MongoClient.connect(state.url))
+  return Rx.Observable.fromPromise(
+      MongoClient.connect(state.url, {readPreference: ReadPreference.NEAREST}))
   .map(db => {
     state.db = db;
     return state;
@@ -45,18 +48,23 @@ function findAddressVerificationResult({state}) {
   .map(d => {
     if (d.length) {
       d.forEach(r => {
-        if (!state.results[r.addressVerificationId].hasOwnProperty("results")) {
-          console.log("ID " + r.addressVerificationId + " has no results"
-              + " array, creating");
-          state.results[r.addressVerificationId].results = [];
+        if (!state.results[r.addressVerificationId].hasOwnProperty("matchingResults")) {
+          // console.log("ID " + r.addressVerificationId + " has no matchingResults"
+          //     + " array, creating");
+          state.results[r.addressVerificationId].matchingResults = [];
         }
-        state.results[r.addressVerificationId].results.push({
+        state.results[r.addressVerificationId].matchingResults.push({
           addressVerificationResult: r
         });
       });
     }
     return state;
   })
+}
+
+function save(state) {
+  return Rx.Observable.fromPromise(
+      fs.writeJson('./out_address.json', state.results))
 }
 
 const eventStream = Rx.Observable.of({
@@ -68,6 +76,7 @@ const eventStream = Rx.Observable.of({
 .mergeMap(state => findAddressVerificationResult({state}));
 
 eventStream
+.do(save)
 .subscribe(ans => {
   console.log(JSON.stringify(ans.results));
   ans.db.close();
