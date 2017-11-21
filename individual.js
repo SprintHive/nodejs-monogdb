@@ -14,10 +14,10 @@ const createConnection = (state) => {
 
 function findFailedIndividualResults(state) {
   const {db} = state;
-  const query = {profileMatches: false};
+  const query = {"creationDate": {"$gte": new Date("2017-10-13T12:10:40.178Z")}};
   return Rx.Observable.fromPromise(
     db.collection("IndividualVerificationResult")
-      .find(query, {limit: 60, sort: {creationDate: -1}})
+      .find(query, {sort: {creationDate: -1}})
       .toArray())
     .map(d => {
       if (d.length) {
@@ -29,7 +29,7 @@ function findFailedIndividualResults(state) {
       }
       return state;
     })
-}
+}                                                                                                                                    ``
 
 function findById(db, _id, collection) {
   const query = {_id};
@@ -63,19 +63,63 @@ function findProvidedIndividualProfiles(state) {
     .map(() => state)
 }
 
-function save(state) {
+function mapIndividualVerificationRequested(d) {
+  const ans = {}
+  ans.type = 'IndividualVerificationRequested'
+  ans.traceId = d.traceId
+  ans.identifyingNumber = d.identifyingNumber
+  ans.firstName = d.firstName
+  ans.middleNames = d.middleNames
+  ans.lastName = d.lastName
+  ans.dateOfBirth = d.dateOfBirth
+  ans.deceased = d.deceased
+
+  return ans
+}
+
+function mapIndividualVerificationProvided(d) {
+  const ans = {}
+  ans.type = 'IndividualVerificationProvided'
+  ans.traceId = d.traceId
+  ans.providerIdentityNumber = d.providerIdentityNumber
+  ans.firstName = d.firstName
+  ans.middleNames = d.middleNames
+  ans.lastName = d.lastName
+  ans.dateOfBirth = d.dateOfBirth
+  ans.deceased = d.deceased
+
+  return ans
+}
+
+function convertToCSV(state) {
+  return Rx.Observable.from(state.results)
+    .map(d => {
+      state.csvResults.push(mapIndividualVerificationRequested(d.individualVerificationRequested))
+      state.csvResults.push(mapIndividualVerificationProvided(d.individualVerificationProvided))
+      return state
+    })
+}
+
+function saveCSV(state) {
+  return Rx.Observable.fromPromise(jsonToCSV(state.csvResults, "identity.csv"))
+}
+
+function saveJson(state) {
   return Rx.Observable.fromPromise(fs.writeJson('./out_identity.json', state.results))
 }
 
 Rx.Observable.of({
   url: 'mongodb://localhost:27047/dkyc-core',
   db: undefined, // used to store a reference to the db.
-  results: {}
+  results: {},
+  csvResults: []
 }).mergeMap(createConnection)
   .mergeMap(findFailedIndividualResults)
   .mergeMap(findIndividualRequests)
   .mergeMap(findProvidedIndividualProfiles)
-  .do(save)
+  // .mergeMap(convertToCSV)
+  .do(saveJson)
+  // .do(saveCSV)
   .subscribe(ans => {
     const count = Object.keys(ans.results).length;
     console.log(`Found ${count} records`);

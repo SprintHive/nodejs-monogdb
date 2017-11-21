@@ -34,3 +34,11 @@ Browse to the following link and follow the instructions
     yarn hello 
 
     # See the package.json#scripts block for more things to run.
+    
+## Dump and restore a collection from Mongodb
+
+    # dump
+    ./mongodump -h localhost --port 27017 -d <DatabaseName> -c <Collection> -q '{"creationDate": {"$gte": new Date("2017-10-13T12:10:40.178Z")}}' --archive=<Filename>.gz --gzip 
+    
+    # restore
+    ./mongorestore -h localhost --port 27017 -d <DatabaseName>  --gzip --archive=<Filename>.gz   
