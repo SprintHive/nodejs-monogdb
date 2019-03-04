@@ -31,7 +31,7 @@ Browse to the following link and follow the instructions
     yarn 
     
     # Run the hello.js 
-    yarn hello 
+    yarn evidence 
 
     # See the package.json#scripts block for more things to run.
     

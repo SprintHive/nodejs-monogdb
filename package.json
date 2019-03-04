@@ -8,15 +8,20 @@
     "query": "node index.js",
     "individual": "node individual.js",
     "address": "node address.js",
+    "evidence": "NODE_ENV=development DEBUG=sprinthive:* nodemon --ignore out src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv-flow": "^0.2.0",
     "fs": "0.0.1-security",
     "fs-extra": "^4.0.2",
     "json-to-csv": "^1.0.0",
-    "mongodb": "^2.2.33",
+    "mongodb": "^3.1.13",
     "rxjs": "^5.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
   }
 }
